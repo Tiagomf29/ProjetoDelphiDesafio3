@@ -1,0 +1,25 @@
+unit UTVeiculoCores;
+
+interface
+uses
+ UTclassePadrao, UTcor;
+
+type
+
+TVeiculoCores = class(TclassePadrao)
+
+private
+
+
+
+protected
+
+
+public
+
+
+end;
+
+implementation
+
+end.

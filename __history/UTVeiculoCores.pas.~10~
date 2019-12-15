@@ -1,0 +1,82 @@
+unit UTVeiculoCores;
+
+interface
+
+uses
+  UTclassePadrao, UTcor, UTVeiculo;
+
+type
+
+  TVeiculoCores = class(TclassePadrao)
+
+  private
+    FVeiculo: TVeiculo;
+    FCor: TCor;
+    function getVeiculo: TVeiculo;
+    procedure setVeiculo(const Value: TVeiculo);
+    function getCor: TCor;
+    procedure setCor(const Value: TCor);
+
+  protected
+
+  public
+    property veiculo: TVeiculo read getVeiculo write setVeiculo;
+    property cor: TCor read getCor write setCor;
+
+    procedure insereVeiculoCores(veiculo: TVeiculoCores);
+    procedure deletaVeiculoCores(veiculo: TVeiculoCores);
+
+  end;
+
+implementation
+
+{ TVeiculoCores }
+
+procedure TVeiculoCores.deletaVeiculoCores(veiculo: TVeiculoCores);
+begin
+  qry.Close;
+  qry.SQL.Clear;
+
+  qry.SQL.Add('delete from veiculocores where veiculoid =:veiculoid and corid =:corid');
+  qry.ParamByName('veiculoid').AsInteger := veiculo.veiculo.id;
+  qry.ParamByName('corid').AsInteger := veiculo.cor.id;
+
+  qry.ExecSQL;
+end;
+
+function TVeiculoCores.getCor: TCor;
+begin
+  Result := FCor;
+end;
+
+function TVeiculoCores.getVeiculo: TVeiculo;
+begin
+  Result := FVeiculo;
+end;
+
+procedure TVeiculoCores.insereVeiculoCores(veiculo: TVeiculoCores);
+begin
+
+  qry.Close;
+  qry.SQL.Clear;
+  qry.SQL.Add('insert into veiculocores values');
+  qry.SQL.Add('(:veiculoid,:corid)');
+
+  qry.ParamByName('veiculoid').AsInteger := veiculo.veiculo.id;
+  qry.ParamByName('corid').AsInteger := veiculo.cor.id;
+
+  qry.ExecSQL;
+
+end;
+
+procedure TVeiculoCores.setCor(const Value: TCor);
+begin
+  Self.FCor := Value;
+end;
+
+procedure TVeiculoCores.setVeiculo(const Value: TVeiculo);
+begin
+  Self.FVeiculo := Value;
+end;
+
+end.

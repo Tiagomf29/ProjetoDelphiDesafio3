@@ -1,0 +1,242 @@
+object frmPrincipal: TfrmPrincipal
+  Left = 0
+  Top = 0
+  Caption = 'Principal'
+  ClientHeight = 428
+  ClientWidth = 680
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object GroupBox1: TGroupBox
+    Left = 8
+    Top = 8
+    Width = 417
+    Height = 177
+    TabOrder = 0
+    object lblModelo: TLabel
+      Left = 6
+      Top = 39
+      Width = 34
+      Height = 13
+      Caption = 'Modelo'
+    end
+    object Label1: TLabel
+      Left = 6
+      Top = 0
+      Width = 33
+      Height = 13
+      Caption = 'C'#243'digo'
+    end
+    object lblCodigoValor: TLabel
+      Left = 6
+      Top = 19
+      Width = 3
+      Height = 13
+    end
+    object Label2: TLabel
+      Left = 6
+      Top = 83
+      Width = 71
+      Height = 13
+      Caption = 'Tipo do ve'#237'culo'
+    end
+    object lblOcupantes: TLabel
+      Left = 6
+      Top = 127
+      Width = 52
+      Height = 13
+      Caption = 'Ocupantes'
+    end
+    object edtModelo: TEdit
+      Left = 6
+      Top = 58
+      Width = 270
+      Height = 21
+      TabOrder = 0
+    end
+    object cbxTipoVeiculo: TComboBox
+      Left = 6
+      Top = 102
+      Width = 270
+      Height = 22
+      Style = csOwnerDrawFixed
+      TabOrder = 1
+    end
+    object edtOcupantes: TEdit
+      Left = 6
+      Top = 144
+      Width = 121
+      Height = 21
+      TabOrder = 2
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 431
+    Top = 0
+    Width = 241
+    Height = 185
+    Caption = 'Cores'
+    TabOrder = 1
+    object cklCores: TCheckListBox
+      Left = 3
+      Top = 16
+      Width = 235
+      Height = 166
+      ItemHeight = 13
+      TabOrder = 0
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 8
+    Top = 191
+    Width = 664
+    Height = 202
+    DataSource = DS
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 2
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnCellClick = DBGrid1CellClick
+  end
+  object btinserir: TButton
+    Left = 100
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Inserir'
+    TabOrder = 3
+    OnClick = btinserirClick
+  end
+  object btnSalvar: TButton
+    Left = 181
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Salvar'
+    TabOrder = 4
+    OnClick = btnSalvarClick
+  end
+  object btnAlterar: TButton
+    Left = 262
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Alterar'
+    TabOrder = 5
+    OnClick = btnAlterarClick
+  end
+  object btnCancelar: TButton
+    Left = 343
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Cancelar'
+    TabOrder = 6
+    OnClick = btnCancelarClick
+  end
+  object btnExcluir: TButton
+    Left = 424
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Excluir'
+    TabOrder = 7
+    OnClick = btnExcluirClick
+  end
+  object btnFechar: TButton
+    Left = 505
+    Top = 399
+    Width = 75
+    Height = 25
+    Caption = 'Fechar'
+    TabOrder = 8
+    OnClick = btnFecharClick
+  end
+  object MainMenu: TMainMenu
+    Left = 640
+    Top = 65520
+    object Cadastros1: TMenuItem
+      Caption = 'Cadastros'
+      object Cor1: TMenuItem
+        Caption = 'Cor'
+        OnClick = Cor1Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object ipodeVeculo1: TMenuItem
+        Caption = 'Tipo de Ve'#237'culo'
+        OnClick = ipodeVeculo1Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+    end
+  end
+  object DS: TDataSource
+    DataSet = CDS
+    Left = 264
+    Top = 16
+  end
+  object DSP: TDataSetProvider
+    Left = 328
+    Top = 16
+  end
+  object CDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DSP'
+    Left = 296
+    Top = 16
+    object CDSid: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'id'
+      Required = True
+    end
+    object CDSmodelo: TWideStringField
+      DisplayLabel = 'Modelo'
+      FieldName = 'modelo'
+      Size = 30
+    end
+    object CDSdescricao: TWideStringField
+      DisplayLabel = 'Tipo de ve'#237'culo'
+      FieldName = 'descricao'
+      Required = True
+    end
+    object CDSocupantes: TIntegerField
+      DisplayLabel = 'Ocupantes'
+      FieldName = 'ocupantes'
+      Required = True
+    end
+    object CDSidTipoVeiculo: TIntegerField
+      FieldName = 'idTipoVeiculo'
+      Required = True
+      Visible = False
+    end
+  end
+  object conexao: TZConnection
+    ControlsCodePage = cCP_UTF16
+    Connected = True
+    HostName = 'localhost'
+    Port = 3306
+    Database = 'bd_veiculo'
+    User = 'root'
+    Password = 'root'
+    Protocol = 'mysql'
+    Left = 200
+    Top = 16
+  end
+end

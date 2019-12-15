@@ -1,0 +1,131 @@
+unit UTCor;
+
+interface
+
+uses
+UTclassePadrao, ZDataSet, System.Generics.Collections;
+
+type
+
+TCor = class(TClassePadrao)
+
+
+private 
+
+FId        : Integer;
+FDescricao : String;
+function getDescricao: String;
+function getId: Integer;
+procedure setDescricao(const Value: String);
+procedure setId(const Value: Integer);
+
+protected
+
+
+public
+property id : Integer read getId write setId;
+property descricao : String read getDescricao write setDescricao;
+function consultaCores(): TObjectList<Tcor>;
+procedure insereCores (cores : Tcor);
+procedure atualizaCor (cores : Tcor);
+procedure deletaCor (cores : Tcor);
+ 
+end;
+
+implementation
+
+uses
+UDataModule;
+{ TCor }
+
+function TCor.getDescricao: String;
+begin
+  Result:= FDescricao;
+end;
+
+function TCor.getId: Integer;
+begin
+  Result:= FId;
+end;
+
+procedure TCor.insereCores(cores: Tcor);
+begin
+
+   qry.Connection := DM.conexao;
+
+   qry.Close;
+   qry.SQL.Clear;
+   qry.SQL.Add('insert into cor (descricao) values (:descricao)');
+   qry.ParamByName('descricao').AsString:= cores.descricao;
+   qry.ExecSQL;
+
+end;
+
+procedure TCor.setDescricao(const Value: String);
+begin
+  Self.FDescricao:= Value;
+end;
+
+procedure TCor.setId(const Value: Integer);
+begin
+  Self.FId:= Value;
+end;
+
+procedure TCor.atualizaCor(cores: Tcor);
+begin
+
+  qry.Connection := DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+  qry.SQL.Add('update cor set descricao =:descricao where id =:id');
+  qry.ParamByName('descricao').AsString:= cores.descricao;
+  qry.ParamByName('id').AsInteger:= cores.id;
+  qry.ExecSQL;
+  
+end;
+
+function TCor.consultaCores(): TObjectList<TCor>;
+var
+cor : TCor;
+lista : TObjectList<Tcor>;
+
+begin
+
+  qry := TZQuery.Create(nil);
+  qry.Connection := DM.conexao;
+  lista := TObjectList<TCor>.Create;
+
+    qry.Close;
+    qry.SQL.Clear;
+    qry.SQL.Text:= cor.sqlPadrao('cor');
+    qry.Open;
+
+    while not qry.Eof do
+    begin
+      cor := TCor.Create;
+      cor.FId := qry.FieldByName('id').AsInteger;
+      cor.FDescricao := qry.FieldByName('descricao').AsString;
+      lista.Add(cor);
+      qry.Next;
+    end;
+
+  result:= lista;
+
+end;
+
+procedure TCor.deletaCor(cores: Tcor);
+begin
+  
+  qry:= TZQuery.Create(nil);
+  qry.Connection := DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+  qry.SQL.Add('delete from cor where id =:id');
+  qry.FieldByName('id').AsInteger:= cores.id;
+  qry.ExecSQL;
+
+end;
+
+end.

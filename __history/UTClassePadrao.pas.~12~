@@ -1,0 +1,40 @@
+unit UTClassePadrao;
+
+interface
+
+uses
+ZDataSet,System.SysUtils;
+
+type
+
+TClassePadrao = class
+
+private
+
+protected
+
+public
+  qry: TZQuery;
+  function sqlPadrao(nomeTabela:String):String;
+
+  destructor destroi();
+
+end;
+
+implementation
+
+{ TClassePadrao }
+
+
+
+destructor TClassePadrao.destroi;
+begin
+  FreeAndNil(qry);
+end;
+
+function TClassePadrao.sqlPadrao(nomeTabela: String): String;
+begin
+  Result:= 'select * from '+nomeTabela;
+end;
+
+end.

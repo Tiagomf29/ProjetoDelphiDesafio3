@@ -1,0 +1,38 @@
+create database bd_veiculo;
+
+-----------------------------------
+
+create table tipoveiculo
+(
+id int auto_increment,
+descricao varchar(20) not null,
+constraint pk_tipoveiculo primary key(id));
+
+-----------------------------------
+
+create table cor
+(
+id integer auto_increment,
+descricao varchar(40) not null,
+constraint pk_cor primary key(id));
+
+-----------------------------------
+
+create table veiculo
+(
+id int auto_increment,
+modelo varchar(30),
+tipoid int not null,
+ocupantes int not null,
+constraint pk_veiculo primary key(id),
+constraint fk_veiculos foreign key(tipoid) references tipoveiculo(id));
+
+-----------------------------------
+
+create table veiculocores
+(
+veiculoid int not null,
+corid int not null,
+constraint pk_veiculocores primary key(veiculoid, corid),
+constraint fk_veiculocores1 foreign key(veiculoid) references veiculo(id),
+constraint fk_veiculocores2 foreign key(corid) references cor(id));

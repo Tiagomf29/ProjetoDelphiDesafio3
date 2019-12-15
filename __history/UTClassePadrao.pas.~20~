@@ -1,0 +1,103 @@
+unit UTClassePadrao;
+
+interface
+
+uses
+  ZDataSet, System.SysUtils, System.Generics.Collections;
+
+type
+
+  TClassePadrao = class
+
+  private
+    FId: Integer;
+    FDescricao: String;
+    function getDescricao: String;
+    function getId: Integer;
+    procedure setDescricao(const Value: String);
+    procedure setId(const Value: Integer);
+
+  protected
+
+  public
+
+    qry: TZQuery;
+
+    function sqlPadrao(nomeTabela: String): String;
+
+    property id: Integer read getId write setId;
+    property descricao: String read getDescricao write setDescricao;
+    
+    procedure buscaVeiculo(id : Integer) ;overload;
+    
+    constructor create();
+    destructor destroi();
+
+  end;
+
+implementation
+uses         
+  UDataModule;
+
+{ TClassePadrao }
+
+procedure TClassePadrao.buscaVeiculo(id: Integer);
+begin
+
+     qry.Connection := dm.conexao;
+
+     qry.Close;
+     qry.SQL.Clear;
+     qry.sql.Add('select v.id,');
+     qry.SQL.Add('v.modelo,');
+     qry.SQL.Add('t.id as idTipoVeiculo,');
+     qry.SQL.Add('t.descricao,');
+     qry.SQL.Add('v.ocupantes ');
+     qry.SQL.Add('from veiculo v ');
+     qry.SQL.Add('inner join tipoveiculo t on t.id = v.tipoid ');
+     qry.SQL.Add('where i=:id');
+     qry.SQL.Add('order by 1 desc');
+
+     qry.ParamByName('id').AsInteger := id;
+
+     qry.Open;
+     
+
+end;
+
+constructor TClassePadrao.create;
+begin
+  qry := TZQuery.create(nil);
+end;
+
+destructor TClassePadrao.destroi;
+begin
+  FreeAndNil(qry);
+end;
+
+function TClassePadrao.getDescricao: String;
+begin
+  Result := FDescricao;
+end;
+
+function TClassePadrao.getId: Integer;
+begin
+  Result := FId;
+end;
+
+procedure TClassePadrao.setDescricao(const Value: String);
+begin
+  Self.FDescricao := Value;
+end;
+
+procedure TClassePadrao.setId(const Value: Integer);
+begin
+  Self.FId := Value;
+end;
+
+function TClassePadrao.sqlPadrao(nomeTabela: String): String;
+begin
+  Result := 'select * from ' + nomeTabela;
+end;
+
+end.

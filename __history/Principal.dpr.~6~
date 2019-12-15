@@ -1,0 +1,20 @@
+program Principal;
+
+uses
+  Vcl.Forms,
+  UPrincipal in 'UPrincipal.pas' {Form1},
+  UTClassePadrao in 'UTClassePadrao.pas',
+  UTCor in 'UTCor.pas',
+  UDataModule in 'UDataModule.pas' {DM: TDataModule},
+  UFrmCor in 'UFrmCor.pas' {frmCor};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfrmCor, frmCor);
+  Application.Run;
+end.

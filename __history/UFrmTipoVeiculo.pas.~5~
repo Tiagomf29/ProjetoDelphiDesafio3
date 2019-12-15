@@ -1,0 +1,107 @@
+unit UFrmTipoVeiculo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ZAbstractRODataset, ZAbstractDataset,
+  ZDataset, Datasnap.Provider, Data.DB, Datasnap.DBClient, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls;
+
+type
+  TfrmCadastroTiposVeiculos = class(TForm)
+    lblDescricao: TLabel;
+    edtDescricao: TEdit;
+    btinserir: TButton;
+    btnSalvar: TButton;
+    btnAlterar: TButton;
+    btnCancelar: TButton;
+    btnExcluir: TButton;
+    DBGrid1: TDBGrid;
+    DS: TDataSource;
+    CDS: TClientDataSet;
+    CDSid: TIntegerField;
+    CDSdescricao: TWideStringField;
+    DSP: TDataSetProvider;
+    qry: TZQuery;
+    lblCodigo: TLabel;
+    lblCodigoValor: TLabel;
+    btnFechar: TButton;
+    procedure FormShow(Sender: TObject);
+    procedure btinserirClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure statusBotoesInsercao(status : boolean);
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadastroTiposVeiculos: TfrmCadastroTiposVeiculos;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmCadastroTiposVeiculos }
+
+procedure TfrmCadastroTiposVeiculos.btinserirClick(Sender: TObject);
+begin
+  statusBotoesInsercao(true);
+end;
+
+procedure TfrmCadastroTiposVeiculos.btnAlterarClick(Sender: TObject);
+begin
+  statusBotoesInsercao(true);
+end;
+
+procedure TfrmCadastroTiposVeiculos.btnCancelarClick(Sender: TObject);
+begin
+  statusBotoesInsercao(false);
+end;
+
+procedure TfrmCadastroTiposVeiculos.btnExcluirClick(Sender: TObject);
+begin
+  statusBotoesInsercao(false);
+end;
+
+procedure TfrmCadastroTiposVeiculos.btnSalvarClick(Sender: TObject);
+begin
+  statusBotoesInsercao(false);
+end;
+
+procedure TfrmCadastroTiposVeiculos.FormShow(Sender: TObject);
+begin
+  statusBotoesInsercao(false);
+end;
+
+procedure TfrmCadastroTiposVeiculos.statusBotoesInsercao(status : boolean);
+begin
+ if status then
+    begin
+      btinserir.Enabled:=false;
+      btnAlterar.Enabled:=false;
+      btnCancelar.Enabled:=true;
+      btnExcluir.Enabled:=false;
+      btnSalvar.Enabled:=true;
+      edtDescricao.Enabled:=true;
+      edtDescricao.SetFocus;
+      btnFechar.Enabled:=false;
+    end 
+    else
+    begin
+      edtDescricao.Enabled:=false;
+      btinserir.Enabled:=true;
+      btnAlterar.Enabled:=true;
+      btnCancelar.Enabled:=false;
+      btnExcluir.Enabled:=true;
+      btnSalvar.Enabled:=false;
+      btnFechar.Enabled:=true;
+    end;  
+end;
+
+end.

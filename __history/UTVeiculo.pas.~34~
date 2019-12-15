@@ -1,0 +1,219 @@
+unit UTVeiculo;
+
+interface
+
+uses
+  UTClassePadrao, UTTipoVeiculo, System.Generics.Collections, UTCor;
+
+type
+
+  TVeiculo = class(TClassePadrao)
+
+  private
+
+    FTipoVeiculo: TTipoVeiculo;
+    FOcupantes: Integer;
+    FlistaCores: TObjectList<TCor>;
+
+    function getOcupantes: Integer;
+    function getTipoVeiculo: TTipoVeiculo;
+    procedure setOcupantes(const Value: Integer);
+    procedure setTipoVeiculo(const Value: TTipoVeiculo);
+    function getListaCores: TObjectList<TCor>;
+    procedure setListaCores(const Value: TObjectList<TCor>);
+
+  protected
+
+  public
+
+    property tipoVeiculo: TTipoVeiculo read getTipoVeiculo write setTipoVeiculo;
+    property ocupantes: Integer read getOcupantes write setOcupantes;
+    property listaCores: TObjectList<TCor> read getListaCores
+      write setListaCores;
+
+    function consultaVeiculos(): TObjectList<TVeiculo>;
+    procedure insereVeiculo(veiculo: TVeiculo);
+    procedure atualizaVeiculo(veiculo: TVeiculo);
+    procedure deletaVeiculo(veiculo: TVeiculo);
+    procedure buscaVeiculo(id : Integer) ;overload;
+    procedure buscaVeiculo (modelo : String); overload;
+
+  end;
+
+implementation
+
+uses
+  UDataModule;
+
+{ TVeiculo }
+
+procedure TVeiculo.atualizaVeiculo(veiculo: TVeiculo);
+begin
+
+  qry.Connection := DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+
+  qry.SQL.Add('update veiculo set modelo =:modelo,');
+  qry.SQL.Add('tipoid =:tipoid,');
+  qry.SQL.Add('ocupantes =:ocupantes ');
+  qry.SQL.Add('where id =:id');
+
+  qry.ParamByName('modelo').AsString := veiculo.descricao;
+  qry.ParamByName('tipoid').AsInteger := veiculo.tipoVeiculo.id;
+  qry.ParamByName('ocupantes').AsInteger := veiculo.ocupantes;
+
+  qry.ExecSQL;
+
+end;
+
+procedure TVeiculo.buscaVeiculo(id: Integer);
+begin
+
+     qry.Connection := dm.conexao;
+
+     qry.Close;
+     qry.SQL.Clear;
+     qry.sql.Add('select v.id,');
+     qry.SQL.Add('v.modelo,');
+     qry.SQL.Add('t.id as idTipoVeiculo,');
+     qry.SQL.Add('t.descricao,');
+     qry.SQL.Add('v.ocupantes ');
+     qry.SQL.Add('from veiculo v ');
+     qry.SQL.Add('inner join tipoveiculo t on t.id = v.tipoid ');
+     qry.SQL.Add('where i=:id');
+     qry.SQL.Add('order by 1 desc');
+
+     qry.ParamByName('id').AsInteger := id;
+
+     qry.Open;
+     
+
+end;
+
+procedure TVeiculo.buscaVeiculo(modelo: String);
+begin
+       qry.Connection := dm.conexao;
+
+     qry.Close;
+     qry.SQL.Clear;
+     qry.sql.Add('select v.id,');
+     qry.SQL.Add('v.modelo,');
+     qry.SQL.Add('t.id as idTipoVeiculo,');
+     qry.SQL.Add('t.descricao,');
+     qry.SQL.Add('v.ocupantes ');
+     qry.SQL.Add('from veiculo v ');
+     qry.SQL.Add('inner join tipoveiculo t on t.id = v.tipoid ');
+     qry.SQL.Add('where v.modelo=:modelo');
+     qry.SQL.Add('order by 1 desc');
+
+     qry.ParamByName('modelo').AsString := modelo;
+
+     qry.Open;
+end;
+
+function TVeiculo.consultaVeiculos: TObjectList<TVeiculo>;
+var
+  lista: TObjectList<TVeiculo>;
+  veiculo: TVeiculo;
+
+begin
+
+  lista := TObjectList<TVeiculo>.Create;
+
+  qry.Connection := DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+
+  qry.SQL.Add('select v.id,');
+  qry.SQL.Add('v.modelo,');
+  qry.SQL.Add('t.descricao,');
+  qry.SQL.Add('v.ocupantes ');
+  qry.SQL.Add('from veiculo v ');
+  qry.SQL.Add('inner join tipoveiculo t on t.id = v.tipoid');
+
+  qry.Open;
+
+  while not qry.Eof do
+    begin
+      veiculo := TVeiculo.Create;
+      veiculo.id := qry.FieldByName('v.id').AsInteger;
+      veiculo.descricao := qry.FieldByName('v.modelo').AsString;
+      veiculo.tipoVeiculo.descricao := qry.FieldByName('t.descricao').AsString;
+      veiculo.ocupantes := qry.FieldByName('ocupantes').AsInteger;
+
+      lista.Add(veiculo);
+
+    end;
+
+  Result := lista;
+
+end;
+
+procedure TVeiculo.deletaVeiculo(veiculo: TVeiculo);
+begin
+
+  qry.Connection := DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+  qry.SQL.Add('delete from veiculo where id =:id');
+
+  qry.ParamByName('id').AsInteger := veiculo.id;
+
+  qry.ExecSQL;
+
+end;
+
+function TVeiculo.getListaCores: TObjectList<TCor>;
+begin
+  Result := FlistaCores;
+end;
+
+function TVeiculo.getOcupantes: Integer;
+begin
+  Result := FOcupantes;
+end;
+
+function TVeiculo.getTipoVeiculo: TTipoVeiculo;
+begin
+  Result := FTipoVeiculo;
+end;
+
+procedure TVeiculo.insereVeiculo(veiculo: TVeiculo);
+begin
+
+  qry.Connection:= DM.conexao;
+
+  qry.Close;
+  qry.SQL.Clear;
+
+  qry.SQL.Add('insert into veiculo (modelo, tipoid, ocupantes)');
+  qry.SQL.Add('values');
+  qry.SQL.Add('(:modelo, :tipoid, :ocupantes)');
+
+  qry.ParamByName('modelo').AsString := veiculo.descricao;
+  qry.ParamByName('tipoid').AsInteger := veiculo.tipoVeiculo.id;
+  qry.ParamByName('ocupantes').AsInteger := veiculo.ocupantes;
+
+  qry.ExecSQL;
+end;
+
+procedure TVeiculo.setListaCores(const Value: TObjectList<TCor>);
+begin
+  Self.FlistaCores := Value;
+end;
+
+procedure TVeiculo.setOcupantes(const Value: Integer);
+begin
+  Self.FOcupantes := Value;
+end;
+
+procedure TVeiculo.setTipoVeiculo(const Value: TTipoVeiculo);
+begin
+  Self.FTipoVeiculo := Value;
+end;
+
+end.
